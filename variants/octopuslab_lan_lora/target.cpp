@@ -13,11 +13,12 @@ OctopusLabLANBoard board;
 WRAPPER_CLASS radio_driver(radio, board);
 
 ESP32RTCClock fallback_clock;
-AutoDiscoverRTCClock rtc_clock(fallback_clock);
+OctopusLabLANRTCClock rtc_clock(fallback_clock);
 SensorManager sensors;
 
 bool radio_init() {
   fallback_clock.begin();
+  rtc_clock.begin(Wire);
 
   #if defined(P_LORA_SCLK)
     return radio.std_init(&spi);
@@ -45,4 +46,3 @@ mesh::LocalIdentity radio_new_identity() {
   RadioNoiseListener rng(radio);
   return mesh::LocalIdentity(&rng);  // create new random identity
 }
-
