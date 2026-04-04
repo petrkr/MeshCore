@@ -1,6 +1,25 @@
 #ifdef ESP_PLATFORM
 
 #include "OctopusLabLANBoard.h"
+#include "target.h"
+
+void onEthNetworkEvent(arduino_event_id_t event) {
+  if (event == ARDUINO_EVENT_ETH_CONNECTED) {
+    MESH_DEBUG_PRINTLN("ETH Connected");
+  } else if (event == ARDUINO_EVENT_ETH_GOT_IP) {
+    board.setNetworkConnected(true);
+    MESH_DEBUG_PRINTLN("ETH Got IP: %s", ETH.localIP().toString().c_str());
+  } else if (event == ARDUINO_EVENT_ETH_LOST_IP) {
+    board.setNetworkConnected(false);
+    MESH_DEBUG_PRINTLN("ETH Lost IP");
+  } else if (event == ARDUINO_EVENT_ETH_DISCONNECTED) {
+    board.setNetworkConnected(false);
+    MESH_DEBUG_PRINTLN("ETH Disconnected");
+  } else if (event == ARDUINO_EVENT_ETH_STOP) {
+    board.setNetworkConnected(false);
+    MESH_DEBUG_PRINTLN("ETH Stopped");
+  }
+}
 
 #if defined(ADMIN_PASSWORD) && !defined(DISABLE_WIFI_OTA)
 
@@ -38,7 +57,9 @@ bool OctopusLabLANBoard::startOTAUpdate(const char* id, char reply[]) {
 }
 
 #else
-bool ESP32Board::startOTAUpdate(const char* id, char reply[]) {
+bool OctopusLabLANBoard::startOTAUpdate(const char* id, char reply[]) {
+  (void)id;
+  (void)reply;
   return false; // not supported
 }
 
