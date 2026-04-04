@@ -27,7 +27,9 @@ public:
       _event_connected = WiFi.onEvent(onEthNetworkEvent, ARDUINO_EVENT_ETH_CONNECTED);
       _event_got_ip = WiFi.onEvent(onEthNetworkEvent, ARDUINO_EVENT_ETH_GOT_IP);
       _event_disconnected = WiFi.onEvent(onEthNetworkEvent, ARDUINO_EVENT_ETH_DISCONNECTED);
+#ifdef ARDUINO_EVENT_ETH_LOST_IP
       _event_lost_ip = WiFi.onEvent(onEthNetworkEvent, ARDUINO_EVENT_ETH_LOST_IP);
+#endif
       _event_stop = WiFi.onEvent(onEthNetworkEvent, ARDUINO_EVENT_ETH_STOP);
     }
 

@@ -9,9 +9,11 @@ void onEthNetworkEvent(arduino_event_id_t event) {
   } else if (event == ARDUINO_EVENT_ETH_GOT_IP) {
     board.setNetworkConnected(true);
     MESH_DEBUG_PRINTLN("ETH Got IP: %s", ETH.localIP().toString().c_str());
+#ifdef ARDUINO_EVENT_ETH_LOST_IP
   } else if (event == ARDUINO_EVENT_ETH_LOST_IP) {
     board.setNetworkConnected(false);
     MESH_DEBUG_PRINTLN("ETH Lost IP");
+#endif
   } else if (event == ARDUINO_EVENT_ETH_DISCONNECTED) {
     board.setNetworkConnected(false);
     MESH_DEBUG_PRINTLN("ETH Disconnected");
