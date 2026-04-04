@@ -18,7 +18,11 @@ SensorManager sensors;
 
 bool radio_init() {
   fallback_clock.begin();
-  rtc_clock.begin(Wire);
+  #if defined(PIN_BOARD_SDA) && defined(PIN_BOARD_SCL)
+    #if PIN_BOARD_SDA >= 0 && PIN_BOARD_SCL >= 0
+      rtc_clock.begin(Wire);
+    #endif
+  #endif
 
   #if defined(P_LORA_SCLK)
     return radio.std_init(&spi);
