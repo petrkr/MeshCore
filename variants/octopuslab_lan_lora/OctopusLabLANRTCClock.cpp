@@ -1,6 +1,9 @@
 #include "OctopusLabLANRTCClock.h"
 
 #include <time.h>
+#include "OctopusLabLANBoard.h"
+
+extern OctopusLabLANBoard board;
 
 namespace {
 constexpr unsigned long NTP_RETRY_MILLIS = 10000;
@@ -16,7 +19,7 @@ void OctopusLabLANRTCClock::begin(TwoWire& wire) {
 void OctopusLabLANRTCClock::tick() {
   AutoDiscoverRTCClock::tick();
 
-  if (!ETH.linkUp()) {
+  if (!board.isNetworkConnected()) {
     return;
   }
 
