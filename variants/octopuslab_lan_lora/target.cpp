@@ -3,12 +3,8 @@
 
 OctopusLabLANBoard board;
 
-#if defined(P_LORA_SCLK)
-  static SPIClass spi;
-  RADIO_CLASS radio = new Module(P_LORA_NSS, P_LORA_DIO_0, P_LORA_RESET, P_LORA_DIO_1, spi);
-#else
-  RADIO_CLASS radio = new Module(P_LORA_NSS, P_LORA_DIO_0, P_LORA_RESET, P_LORA_DIO_1);
-#endif
+static SPIClass spi;
+RADIO_CLASS radio = new Module(P_LORA_NSS, P_LORA_DIO_0, P_LORA_RESET, P_LORA_DIO_1, spi);
 
 WRAPPER_CLASS radio_driver(radio, board);
 
@@ -18,17 +14,9 @@ SensorManager sensors;
 
 bool radio_init() {
   fallback_clock.begin();
-  #if defined(PIN_BOARD_SDA) && defined(PIN_BOARD_SCL)
-    #if PIN_BOARD_SDA >= 0 && PIN_BOARD_SCL >= 0
-      rtc_clock.begin(Wire);
-    #endif
-  #endif
+  rtc_clock.begin(Wire);
 
-  #if defined(P_LORA_SCLK)
-    return radio.std_init(&spi);
-  #else
-    return radio.std_init();
-  #endif
+  return radio.std_init(&spi);
 }
 
 uint32_t radio_get_rng_seed() {
