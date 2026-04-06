@@ -34,7 +34,15 @@ public:
     }
 
     if (!_eth_started) {
-      ETH.begin(LAN_PHY_ADDR, LAN_POWER, LAN_MDC, LAN_MDIO, ETH_PHY_TYPE, LAN_CLOCK_MODE);
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
+        // SDK 5.x (Arduino SDK 3.x)
+        #pragma message("Compiling ETH init: SDK 5.x (Arduino core 3.x)")
+        ETH.begin(ETH_PHY_TYPE, LAN_PHY_ADDR, LAN_MDC, LAN_MDIO, LAN_POWER, LAN_CLOCK_MODE);
+#else
+        // SDK 4.x (Arduino SDK 2.x)
+        #pragma message("Compiling ETH init: SDK 4.x (Arduino core 2.x)")
+        ETH.begin(LAN_PHY_ADDR, LAN_POWER, LAN_MDC, LAN_MDIO, ETH_PHY_TYPE, LAN_CLOCK_MODE);
+#endif
       _eth_started = true;
       inhibit_sleep = true;
     }
